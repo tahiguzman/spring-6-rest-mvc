@@ -4,12 +4,11 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @Builder
 @Data
-public class Customer {
+public class CustomerDTO {
     private UUID id;
     private String name;
     private Integer version;

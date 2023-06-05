@@ -6,6 +6,8 @@ import guru.springframework.spring6restmvc.repositories.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,16 +30,23 @@ class CustomerControllerIT {
     @Rollback
     @Transactional
     @Test
-    void testListAllEmptyList() {
-        customerRepository.deleteAll();
-        List<CustomerDTO> dtos = customerController.listAllCustomers();
-        assertThat(dtos.size()).isEqualTo(0);
-    }
+    void saveNewCostumerTest() {
 
-    @Test
-    void testListAll() {
-        List<CustomerDTO> dtos = customerController.listAllCustomers();
-        assertThat(dtos.size()).isEqualTo(3);
+     CustomerDTO customerDTO = CustomerDTO.builder()
+             .name("New Costumer")
+             .build();
+
+     ResponseEntity responseEntity = customerController.handlePostCustomer(customerDTO);
+
+     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+     assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
+
+     String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
+     UUID savedUUID = UUID.fromString(locationUUID[4]);
+
+     Customer customer = customerRepository.findById(savedUUID).get();
+     assertThat(customer).isNotNull();
+
     }
 
     @Test
@@ -52,5 +61,20 @@ class CustomerControllerIT {
         Customer customer = customerRepository.findAll().get(0);
         CustomerDTO dto = customerController.getCustomerById(customer.getId());
         assertThat(dto).isNotNull();
+    }
+
+    @Test
+    void testListAll() {
+        List<CustomerDTO> dtos = customerController.listAllCustomers();
+        assertThat(dtos.size()).isEqualTo(3);
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testListAllEmptyList() {
+        customerRepository.deleteAll();
+        List<CustomerDTO> dtos = customerController.listAllCustomers();
+        assertThat(dtos.size()).isEqualTo(0);
     }
 }

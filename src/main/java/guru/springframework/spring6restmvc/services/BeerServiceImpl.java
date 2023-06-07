@@ -105,6 +105,8 @@ public class BeerServiceImpl implements BeerService {
             existing.setUpc(beer.getUpc());
         }
 
+        return Optional.of(existing);
+
     }
 
     @Override

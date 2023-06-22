@@ -9,18 +9,20 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
 @Builder
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Beer {
 
     @Id
@@ -42,8 +44,8 @@ public class Beer {
     @NotNull
     private BeerStyle beerStyle;
 
-    @NotBlank
     @NotNull
+    @NotBlank
     @Size(max = 255)
     private String upc;
     private Integer quantityOnHand;
@@ -51,10 +53,12 @@ public class Beer {
     @NotNull
     private BigDecimal price;
 
+    @OneToMany(mappedBy = "beer")
+    private Set<BeerOrderLine> beerOrderLines;
+
     @CreationTimestamp
     private LocalDateTime createdDate;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     private LocalDateTime updateDate;
-
 }

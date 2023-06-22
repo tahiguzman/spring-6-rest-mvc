@@ -4,7 +4,7 @@
     drop table if exists customer;
 
     create table beer (
-       id varchar(36) primary key,
+       id varchar(36) not null,
         beer_name varchar(50) not null,
         beer_style smallint not null,
         created_date datetime(6),
@@ -17,7 +17,7 @@
     ) engine=InnoDB;
 
     create table customer (
-       id varchar(36) primary key,
+       id varchar(36) not null,
         created_date datetime(6),
         name varchar(255),
         update_date datetime(6),

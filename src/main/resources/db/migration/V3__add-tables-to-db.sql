@@ -1,27 +1,29 @@
+drop table if exists beer_order_line;
 drop table if exists beer_order;
 
-drop table if exists beer_order_line;
+CREATE TABLE `beer_order`
+(
+    id                 varchar(36) NOT NULL,
+    created_date       datetime(6)  DEFAULT NULL,
+    customer_ref       varchar(255) DEFAULT NULL,
+    last_modified_date datetime(6)  DEFAULT NULL,
+    version            bigint       DEFAULT NULL,
+    customer_id        varchar(36)  DEFAULT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT FOREIGN KEY (customer_id) REFERENCES customer (id)
+) ENGINE = InnoDB;
 
-
-create table beer_order(
-    id varchar(36) primary key,
-    created_date datetime(6),
-    customer_ref varchar(255),
-    last_modified_date datetime(6),
-    version bigint,
-    customer_id varchar (36)
-    foreign key (customer_id) references customer(id)
-    )engine=innoDB;
-
-create table beer_order_line(
-    id varchar(36),
-    beer_id varchar(36),
-    created_date datetime(6),
-    last_modified_date datetime(6),
-    order_quantity int,
-    quantity allocated int,
-    version bigint,
-    beer_order_id varchar(36),
-    foreign key (beer_order_id) references beer_order(id),
-    foreign key (beer_id) references beer(id),
-)engine=innoDB;
+CREATE TABLE `beer_order_line`
+(
+    id                 varchar(36) NOT NULL,
+    beer_id            varchar(36) DEFAULT NULL,
+    created_date       datetime(6) DEFAULT NULL,
+    last_modified_date datetime(6) DEFAULT NULL,
+    order_quantity     int         DEFAULT NULL,
+    quantity_allocated int         DEFAULT NULL,
+    version            bigint      DEFAULT NULL,
+    beer_order_id      varchar(36) DEFAULT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT FOREIGN KEY (beer_order_id) REFERENCES beer_order (id),
+    CONSTRAINT FOREIGN KEY (beer_id) REFERENCES beer (id)
+) ENGINE = InnoDB;
